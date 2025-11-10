@@ -7,10 +7,11 @@ class PaymentMethod:
     def process_payment(self, amount: float) -> bool:
         """Abstract method to process payments."""
         raise NotImplementedError
-        # new method implemented by Dahana Moz Ruiz
+
     def validate_payment_info(self) -> bool:
-    """Basic validation method to be overridden by subclasses."""
-    raise NotImplementedError
+        """Basic validation method to be overridden by subclasses."""
+        raise NotImplementedError
+
 
 class CreditCard(PaymentMethod):
     """Implements credit card payment."""
@@ -20,10 +21,17 @@ class CreditCard(PaymentMethod):
         self.card_number = card_number
         self.holder_name = holder_name
 
+    def validate_payment_info(self) -> bool:
+        """Check if card number is 16 digits."""
+        return len(self.card_number) == 16 and self.card_number.isdigit() 
+
     def process_payment(self, amount: float) -> bool:
         """Process a credit card payment."""
-        print(f"Charging ${amount:.2f} to card {self.card_number[-4:]}...")
-        return True
+        if not self.validate_payment_info():  
+            print("Invalid credit card information.") 
+            return False  
+        print(f"Charging ${amount:.2f} to card {self.card_number[-4:]}...") 
+        return True 
 
 
 class PayPal(PaymentMethod):
@@ -32,11 +40,15 @@ class PayPal(PaymentMethod):
     def __init__(self, email: str):
         super().__init__("PayPal")
         self.email = email
-# this method was modified by Dahana Moz Ruiz
+
+    def validate_payment_info(self) -> bool:
+        """Simple validation for email-based payments."""
+        return "@" in self.email and "." in self.email  
+
     def process_payment(self, amount: float) -> bool:
-    """Process a PayPal payment."""
-    if not self.validate_payment_info():
-        print("Invalid PayPal account.")
-        return False
-    print(f"Processing PayPal payment of ${amount:.2f} from {self.email}...")
-    return True
+        """Process a PayPal payment."""
+        if not self.validate_payment_info(): 
+            print("Invalid PayPal account.") 
+            return False  
+        print(f"Processing PayPal payment of ${amount:.2f} from {self.email}...")  
+        return True  
