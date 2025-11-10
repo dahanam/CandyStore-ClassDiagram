@@ -7,7 +7,10 @@ class PaymentMethod:
     def process_payment(self, amount: float) -> bool:
         """Abstract method to process payments."""
         raise NotImplementedError
-
+        # new method implemented by Dahana Moz Ruiz
+    def validate_payment_info(self) -> bool:
+    """Basic validation method to be overridden by subclasses."""
+    raise NotImplementedError
 
 class CreditCard(PaymentMethod):
     """Implements credit card payment."""
@@ -29,8 +32,11 @@ class PayPal(PaymentMethod):
     def __init__(self, email: str):
         super().__init__("PayPal")
         self.email = email
-
+# this method was modified by Dahana Moz Ruiz
     def process_payment(self, amount: float) -> bool:
-        """Process a PayPal payment."""
-        print(f"Processing PayPal payment of ${amount:.2f} from {self.email}...")
-        return True
+    """Process a PayPal payment."""
+    if not self.validate_payment_info():
+        print("Invalid PayPal account.")
+        return False
+    print(f"Processing PayPal payment of ${amount:.2f} from {self.email}...")
+    return True
